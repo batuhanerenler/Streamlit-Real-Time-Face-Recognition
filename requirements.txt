@@ -1,2 +1,9 @@
-numpy
 opencv-python-headless
+mtcnn
+tensorflow==2.6.0
+keras==2.6.0
+pandas
+numpy
+pillow
+matplotlib
+seaborn
