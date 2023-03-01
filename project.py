@@ -24,8 +24,9 @@ def detect_faces(video_capture):
         for (x, y, w, h) in faces:
             cv2.rectangle(frame, (x, y), (x+w, y+h), (0, 255, 0), 2)
 
-        # Return the resulting frame
-        yield cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
+        # Encode the frame as JPEG and yield it to the client
+        _, jpeg = cv2.imencode('.jpg', cv2.cvtColor(frame, cv2.COLOR_BGR2RGB))
+        yield jpeg.tobytes()
 
 # Define the main function for the Streamlit app
 def main():
@@ -35,18 +36,18 @@ def main():
     # Open the video capture device (0 is usually the built-in webcam)
     video_capture = cv2.VideoCapture(0)
 
-    # Create a display window for the video stream
-    video_display = st.image([])
+    # Create a display container for the video stream
+    video_display = st.empty()
 
     # Loop over frames from the video stream and display the resulting frame
-    for frame in detect_faces(video_capture):
-        video_display.image(frame)
+    for frame_bytes in st.websocket(detect_faces(video_capture)):
+        video_display.image(frame_bytes)
 
         # Exit the loop if the 'q' key is pressed
         if cv2.waitKey(1) & 0xFF == ord('q'):
             break
 
-    # Release the video capture device and close the display window
+    # Release the video capture device and close the display container
     video_capture.release()
 
 # Run the app
