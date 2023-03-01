@@ -1,5 +1,6 @@
 import cv2
 import streamlit as st
+import pyv4l2
 
 def detect_faces(video_capture):
     # Load the cascade classifier for face detection
@@ -8,11 +9,7 @@ def detect_faces(video_capture):
     # Loop over frames from the video stream
     while True:
         # Read a frame from the video stream
-        ret, frame = video_capture.read()
-
-        # Check if the frame is empty
-        if not ret:
-            continue
+        frame = video_capture.read()
 
         # Convert the frame to grayscale
         gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
@@ -33,7 +30,7 @@ def main():
     st.title('Real-time Face Recognition')
 
     # Open the video capture device (0 is usually the built-in webcam)
-    video_capture = cv2.VideoCapture(0)
+    video_capture = pyv4l2.Capture(0)
 
     # Create a placeholder image for the video stream
     video_display = st.empty()
@@ -47,7 +44,7 @@ def main():
             break
 
     # Release the video capture device
-    video_capture.release()
+    video_capture.close()
 
 # Run the app
 if __name__ == '__main__':
