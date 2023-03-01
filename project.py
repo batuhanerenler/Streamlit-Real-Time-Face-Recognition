@@ -1,13 +1,15 @@
 import streamlit as st
 import cv2
 import numpy as np
+import os
 
 # Load the pre-trained face detection model from OpenCV
 face_cascade = cv2.CascadeClassifier(cv2.data.haarcascades + "haarcascade_frontalface_default.xml")
 
 # Load the pre-trained age and gender prediction models from OpenCV
-age_net = cv2.dnn.readNetFromCaffe("deploy_age.prototxt", "age_net.caffemodel")
-gender_net = cv2.dnn.readNetFromCaffe("deploy_gender.prototxt", "gender_net.caffemodel")
+dir_path = os.path.dirname(os.path.realpath(__file__))
+age_net = cv2.dnn.readNet(cv2.samples.findFile(os.path.join(dir_path, "age_net.caffemodel")), cv2.samples.findFile(os.path.join(dir_path, "deploy_age.prototxt")))
+gender_net = cv2.dnn.readNet(cv2.samples.findFile(os.path.join(dir_path, "gender_net.caffemodel")), cv2.samples.findFile(os.path.join(dir_path, "deploy_gender.prototxt")))
 
 # Define a function to detect faces, mark them with a square, and predict age and gender
 def detect_faces(image):
@@ -56,15 +58,18 @@ def app():
     # If an image was uploaded, display it and process it
     if uploaded_file is not None:
         # Load the image
+        image = cv2.imdecode
+    # If an image was uploaded, display it and process it
+    if uploaded_file is not None:
+        # Load the image
         image = cv2.imdecode(np.fromstring(uploaded_file.read(), np.uint8), cv2.IMREAD_COLOR)
 
         # Detect faces, mark them with a square, and predict age and gender
         annotated_image = detect_faces(image)
 
-       # Display the annotated image
+        # Display the annotated image
         st.image(annotated_image, channels="BGR")
 
 # Run the streamlit app
 if __name__ == "__main__":
     app()
-
