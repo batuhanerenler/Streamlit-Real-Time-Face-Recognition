@@ -1,5 +1,6 @@
 import streamlit as st
 import cv2
+import numpy as np
 
 # Load the pre-trained face detection model from OpenCV
 face_cascade = cv2.CascadeClassifier(cv2.data.haarcascades + "haarcascade_frontalface_default.xml")
@@ -60,5 +61,10 @@ def app():
         # Detect faces, mark them with a square, and predict age and gender
         annotated_image = detect_faces(image)
 
-        # Display the annotated image
-        st.image(annotated_image
+       # Display the annotated image
+        st.image(annotated_image, channels="BGR")
+
+# Run the streamlit app
+if __name__ == "__main__":
+    app()
+
