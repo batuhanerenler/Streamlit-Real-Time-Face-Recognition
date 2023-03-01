@@ -1,9 +1,1 @@
 opencv-python-headless
-mtcnn
-tensorflow
-keras
-pandas
-numpy
-pillow
-matplotlib
-seaborn
